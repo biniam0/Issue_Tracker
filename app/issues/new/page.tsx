@@ -1,20 +1,20 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 
+import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
+import createIssueSchema from "@/app/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Callout, TextField } from "@radix-ui/themes";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import dynamic from "next/dynamic";
+import delay from "delay";
 import "easymde/dist/easymde.min.css";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import createIssueSchema from "@/app/validationSchema";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import { z } from "zod/v4";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import delay from "delay";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -22,7 +22,7 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
 
 type IssueFormType = z.infer<typeof createIssueSchema>;
 
-const NewIssuePage = async () => {
+const NewIssuePage = () => {
   const router = useRouter();
   const {
     register,
@@ -45,7 +45,7 @@ const NewIssuePage = async () => {
     } catch (error) {
       setIsSubmitting(false);
       if (axios.isAxiosError(error)) {
-        setError("Something went wrong while creating issue.");
+        setError("Somebthing went wrong while creating issue.");
         console.error("Axios error:", error);
       } else {
         setError(String(error));
@@ -56,7 +56,6 @@ const NewIssuePage = async () => {
     }
   };
 
-  await delay(2000);
 
   return (
     <div className="max-w-lg ">
