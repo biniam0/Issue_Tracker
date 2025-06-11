@@ -5,8 +5,9 @@ import React from "react";
 const IssuesPage = () => {
   return (
     <>
-      <Button><Link href="issues/new">New Issue</Link></Button>
-      <div>IssuesPage</div>
+      <Button>
+        <Link href="issues/new">New Issue</Link>
+      </Button>
     </>
   );
 };
