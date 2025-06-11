@@ -3,7 +3,8 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-import { Text, Button, Callout, TextField } from "@radix-ui/themes";
+import Spinner from "@/app/components/Spinner";
+import { Button, Callout, TextField } from "@radix-ui/themes";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import dynamic from "next/dynamic";
 import "easymde/dist/easymde.min.css";
@@ -37,13 +38,16 @@ const NewIssuePage = () => {
     resolver: zodResolver(createIssueSchema),
   });
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const description = watch("description", "");
 
   const handleCreateIssue = async (data: IssueFormType) => {
     try {
+      setIsSubmitting(true);
       await axios.post("/api/issues", data);
       router.push("/issues");
     } catch (error) {
+      setIsSubmitting(false);
       if (axios.isAxiosError(error)) {
         setError("Something went wrong while creating issue.");
         console.error("Axios error:", error);
@@ -51,6 +55,8 @@ const NewIssuePage = () => {
         setError(String(error));
         console.error("Unexpected error:", error);
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -64,24 +70,26 @@ const NewIssuePage = () => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
+
       <form
         className="space-y-3"
         onSubmit={handleSubmit((data) => handleCreateIssue(data))}
       >
+        <ErrorMessage> {errors.title?.message}</ErrorMessage>
         <TextField.Root
           placeholder="Title: Bug Fix"
           {...register("title")}
         ></TextField.Root>
-        <ErrorMessage> {errors.title?.message}</ErrorMessage>
+        <ErrorMessage> {errors.description?.message}</ErrorMessage>
         <SimpleMDE
           placeholder="Description"
           value={description}
           onChange={(value) => setValue("description", value)}
         />
 
-        <ErrorMessage> {errors.description?.message}</ErrorMessage>
-
-        <Button>Submit New Issue</Button>
+        <Button disabled={isSubmitting}>
+          Submit New Issue {isSubmitting && <Spinner />}{" "}
+        </Button>
       </form>
     </div>
   );
