@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import createIssueSchema from "@/app/validationSchema";
-import { z } from "zod";
+import { z } from "zod/v4";
 import ErrorMessage from "@/app/components/ErrorMessage";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
@@ -21,10 +21,6 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
 
 type IssueFormType = z.infer<typeof createIssueSchema>;
 
-// interface IssueFormType {
-//   title: string;
-//   description: string;
-// }
 
 const NewIssuePage = () => {
   const router = useRouter();
