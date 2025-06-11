@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import createIssueSchema from "@/app/validationSchema";
 import { z } from "zod/v4";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import delay from "delay";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -21,8 +22,7 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
 
 type IssueFormType = z.infer<typeof createIssueSchema>;
 
-
-const NewIssuePage = () => {
+const NewIssuePage = async () => {
   const router = useRouter();
   const {
     register,
@@ -55,6 +55,8 @@ const NewIssuePage = () => {
       setIsSubmitting(false);
     }
   };
+
+  await delay(2000);
 
   return (
     <div className="max-w-lg ">
