@@ -25,7 +25,7 @@ export default function FormClient() {
   const onSubmit = async (data: IssueType) => {
     try {
       await axios.post("/api/issues", data);
-      router.push("/issues");
+      router.push("/issues/list");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error.response?.data || error.message);
