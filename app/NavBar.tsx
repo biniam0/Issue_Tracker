@@ -5,7 +5,15 @@ import { useSession } from "next-auth/react";
 import { AiFillBug } from "react-icons/ai";
 import { usePathname } from "next/navigation";
 import classnames from "classnames";
-import { Box, Container, Flex } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  DropdownMenu,
+  Flex,
+  Text
+} from "@radix-ui/themes";
 
 const NavBar = () => {
   const currentPath = usePathname();
@@ -41,12 +49,38 @@ const NavBar = () => {
               ))}
             </ul>{" "}
           </Flex>
-          <Box>
+          <Box className="gap-4">
             {status === "authenticated" && (
-              <Link href="api/auth/signout">Sign Out</Link>
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Button
+                    variant="ghost"
+                    style={{ padding: 0, border: "none", background: "none" }}
+                  >
+                    <Avatar
+                      radius="full"
+                      src={session.user!.image!}
+                      fallback={session.user!.email![0]}
+                      className="cursor-pointer"
+                    />
+                  </Button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Label>
+                    <Text size="2">
+                      {session.user!.email}
+                    </Text>
+                  </DropdownMenu.Label>
+                  <DropdownMenu.Item>
+                    <Link href="/api/auth/signout">Sign Out</Link>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
             )}
             {status === "unauthenticated" && (
-              <Link href="api/auth/signin">Login</Link>
+              <Button variant="soft">
+                <Link href="/api/auth/signin">Login</Link>
+              </Button>
             )}
           </Box>
         </Flex>
