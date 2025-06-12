@@ -58,10 +58,12 @@ const NavBar = () => {
                     style={{ padding: 0, border: "none", background: "none" }}
                   >
                     <Avatar
+                    size="2"
                       radius="full"
                       src={session.user!.image!}
-                      fallback={session.user!.email![0]}
-                      className="cursor-pointer"
+                      fallback={"?"} // {session.user!.email![0]}
+                      referrerPolicy="no-referrer"
+                      className=" cursor-pointer"
                     />
                   </Button>
                 </DropdownMenu.Trigger>
