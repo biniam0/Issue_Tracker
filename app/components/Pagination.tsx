@@ -8,7 +8,7 @@ import {
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   itemCount: number;
@@ -22,17 +22,21 @@ const Pagination = ({
   currentPage,
 }: Props) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const pageCount = Math.ceil(itemsCount / pageSize);
   if (pageCount <= 1) return null;
 
   const changePage = (page: number) => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams.toString());
+    // Set or update the page number
     params.set("page", page.toString());
-    router.push("?" + params.toString());
+
+    const query = params.toString() ? `?${params.toString()}` : "";
+    router.push(`/issues/list${query}`);
   };
   return (
-    <Flex align="center" gap="2" p="2">
+    <Flex align="center" gap="2">
       <Text size="2">
         Page {currentPage} of {pageCount}
       </Text>
