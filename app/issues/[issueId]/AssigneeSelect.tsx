@@ -1,12 +1,12 @@
 "use client";
 
 import { Skeleton } from "@/app/components";
-import { User } from "@prisma/client";
-import { Box, Select } from "@radix-ui/themes";
+import { Issue, User } from "@prisma/client";
+import { Select } from "@radix-ui/themes";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const AssigneeSelect = () => {
+const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,21 +52,28 @@ const AssigneeSelect = () => {
 
   // if (error) return null;
   return (
-    <Box width="100px" asChild>
-      <Select.Root size="2">
-        <Select.Trigger placeholder="Assign..." />
-        <Select.Content>
-          <Select.Group>
-            <Select.Label>Suggestions</Select.Label>
-            {users?.map((user) => (
-              <Select.Item key={user.id} value={user.id}>
-                {user.name}
-              </Select.Item>
-            ))}
-          </Select.Group>
-        </Select.Content>
-      </Select.Root>
-    </Box>
+    <Select.Root
+      size="2"
+      onValueChange={(userId) => {
+        axios.patch(`/api/issues/${issue.id}`, {
+          assignedToUserId: userId === "unassigned" ? null : userId,
+        });
+      }}
+      defaultValue={issue.assignedToUserId || ""}
+    >
+      <Select.Trigger placeholder="Assign..." />
+      <Select.Content>
+        <Select.Group>
+          <Select.Label>Suggestions</Select.Label>
+          <Select.Item value="unassigned">Unassigned</Select.Item>
+          {users?.map((user) => (
+            <Select.Item key={user.id} value={user.id}>
+              {user.name}
+            </Select.Item>
+          ))}
+        </Select.Group>
+      </Select.Content>
+    </Select.Root>
   );
 };
 

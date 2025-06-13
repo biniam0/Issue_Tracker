@@ -8,8 +8,8 @@ const PATCH = async (
   req: NextRequest,
   { params }: { params: { issueId: string } }
 ) => {
-  // const session = await getServerSession(authOptions);
-  // if (!session) return NextResponse.json({}, { status: 401 });
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({}, { status: 401 });
 
   const body = await req.json();
   const { issueId } = await params;
@@ -78,4 +78,3 @@ const DELETE = async (
 };
 
 export { DELETE, PATCH };
-
