@@ -1,20 +1,23 @@
 "use client";
 
-import { prisma } from "@/prisma/client";
 import { Card } from "@radix-ui/themes";
 import { ResponsiveContainer, BarChart, XAxis, YAxis, Bar } from "recharts";
 
-interface Props {
-  open: number;
-  closed: number;
-  inProgress: number;
+interface T {
+  OPEN: number;
+  CLOSED: number;
+  IN_PROGRESS: number;
 }
 
-const IssuesChart = async ({ open, closed, inProgress }: Props) => {
+interface Props {
+  propData: T;
+}
+
+const IssuesChart = async ({ propData }: Props) => {
   const data = [
-    { label: "Open", value: open },
-    { label: "In Progress", value: inProgress },
-    { label: "Closed", value: closed },
+    { label: "Open", value: propData.OPEN },
+    { label: "In Progress", value: propData.IN_PROGRESS },
+    { label: "Closed", value: propData.CLOSED },
   ];
 
   return (

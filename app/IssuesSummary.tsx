@@ -3,21 +3,28 @@ import { Status } from "@prisma/client";
 import { Card, Flex, Text } from "@radix-ui/themes";
 import Link from "next/link";
 
-interface Props {
-  open: number;
-  closed: number;
-  inProgress: number;
+interface T {
+  OPEN: number;
+  CLOSED: number;
+  IN_PROGRESS: number;
 }
 
-const IssuesSummary = async ({ open, closed, inProgress }: Props) => {
+interface Props {
+  propData: T;
+}
 
+const IssuesSummary = async ({ propData }: Props) => {
   const statuses: { label: string; value: number; status: Status }[] = [
-    { label: "Open Issues", value: open, status: "OPEN" },
-    { label: "In-Progress Issues", value: inProgress, status: "IN_PROGRESS" },
-    { label: "Closed Issues", value: closed, status: "CLOSED" },
+    { label: "Open Issues", value: propData.OPEN, status: "OPEN" },
+    {
+      label: "In-Progress Issues",
+      value: propData.IN_PROGRESS,
+      status: "IN_PROGRESS",
+    },
+    { label: "Closed Issues", value: propData.CLOSED, status: "CLOSED" },
   ];
   return (
-    <Flex gap="3" p="4">
+    <Flex gap="3">
       {statuses.map((status) => (
         <Card key={status.label}>
           <Flex direction="column">
