@@ -13,28 +13,37 @@ interface Props {
   };
 }
 
+const columns: {
+  label: string;
+  value: keyof Issue;
+  className?: string;
+}[] = [
+  { label: "Issue", value: "title" },
+  { label: "Status", value: "status", className: "hidden md:table-cell" },
+  { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
+];
+
 const IssuesPage = async ({ searchParams }: Props) => {
+  const { status: statusParam, orderBy: orderByParam } = await searchParams;
+
   const statuses = [...Object.values(Status), "all"];
-  const columns: {
-    label: string;
-    value: keyof Issue;
-    className?: string;
-  }[] = [
-    { label: "Issue", value: "title" },
-    { label: "Status", value: "status", className: "hidden md:table-cell" },
-    { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
-  ];
-  let { status } = await searchParams;
+  const status = statuses.includes(statusParam) ? statusParam : "all";
+  const validatedOrderBy = columns
+    .map((column) => column.value)
+    .includes(orderByParam)
+    ? { [orderByParam]: "asc" }
+    : undefined;
 
-  status = statuses.includes(status) ? status : "all";
-
-  let issues = await prisma.issue.findMany();
+  let issues = [];
 
   if (status !== "all") {
     issues = await prisma.issue.findMany({
-      where: {
-        status: status,
-      },
+      where: { status },
+      orderBy: validatedOrderBy,
+    });
+  } else {
+    issues = await prisma.issue.findMany({
+      orderBy: validatedOrderBy,
     });
   }
 
@@ -50,11 +59,24 @@ const IssuesPage = async ({ searchParams }: Props) => {
                 className={column.className}
               >
                 <NextLink
-                  href={{ query: { ...searchParams, orderBy: column.value } }}
+                  href={{
+                    query: { status: statusParam, orderBy: column.value },
+                  }}
                 >
                   {column.label}
                 </NextLink>
-                {column.value === searchParams.orderBy && (
+                {/* <NextLink
+                  href={{
+                    pathname: "/issues/list",
+                    query: {
+                      status: statusParam,
+                      orderBy: column.value,
+                    },
+                  }}
+                >
+                  {column.label}
+                </NextLink> */}
+                {column.value === orderByParam && (
                   <AiOutlineArrowUp className="pl-1 inline" />
                 )}
               </Table.ColumnHeaderCell>
