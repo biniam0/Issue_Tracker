@@ -58,6 +58,8 @@ const IssuesPage = async ({ searchParams }: Props) => {
                 key={column.value}
                 className={column.className}
               >
+                {/* IT IS SURE THAT WE ARE UPDATING THE QUERY 
+                  PARAMS ON THE CURRENT ROUTE NOT NEED TO SPECIFY PATHNAME */}
                 <NextLink
                   href={{
                     query: { status: statusParam, orderBy: column.value },
@@ -65,17 +67,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
                 >
                   {column.label}
                 </NextLink>
-                {/* <NextLink
-                  href={{
-                    pathname: "/issues/list",
-                    query: {
-                      status: statusParam,
-                      orderBy: column.value,
-                    },
-                  }}
-                >
-                  {column.label}
-                </NextLink> */}
+
                 {column.value === orderByParam && (
                   <AiOutlineArrowUp className="pl-1 inline" />
                 )}
