@@ -1,5 +1,5 @@
 import authOptions from "@/app/auth/authOptions";
-import issueSchema from "@/app/validationSchema";
+import { patchIssueSchema } from "@/app/validationSchema";
 import { prisma } from "@/prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,21 +8,31 @@ const PATCH = async (
   req: NextRequest,
   { params }: { params: { issueId: string } }
 ) => {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({}, { status: 401 });
+  // const session = await getServerSession(authOptions);
+  // if (!session) return NextResponse.json({}, { status: 401 });
 
   const body = await req.json();
   const { issueId } = await params;
-  const validation = issueSchema.safeParse(body);
+  const validation = patchIssueSchema.safeParse(body);
   if (!validation.success)
     return NextResponse.json(validation.error, { status: 400 });
+
+  const { title, description, assignedToUserId } = body;
+
+  if (assignedToUserId) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: assignedToUserId,
+      },
+    });
+
+    if (!user)
+      return NextResponse.json({ error: "Invalid user." }, { status: 400 });
+  }
 
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(issueId) },
   });
-
-  console.log("This is Body: ", body);
-  console.log("This is retrieved Issue: ", issue);
 
   if (!issue)
     return NextResponse.json({ error: "Issue not found" }, { status: 404 });
@@ -32,8 +42,9 @@ const PATCH = async (
       id: issue.id,
     },
     data: {
-      title: body.title,
-      description: body.description,
+      ...(title && { title }),
+      ...(description && { description }),
+      assignedToUserId: assignedToUserId ?? null,
     },
   });
 
@@ -52,7 +63,7 @@ const DELETE = async (
   const issue = await prisma.issue.findUnique({
     where: {
       id: parseInt(issueId),
-    }
+    },
   });
 
   if (!issue)
@@ -66,4 +77,5 @@ const DELETE = async (
   return NextResponse.json(deletedIssue);
 };
 
-export { PATCH, DELETE };
+export { DELETE, PATCH };
+
