@@ -11,7 +11,11 @@ interface Props {
 }
 
 const IssuesPage = async ({ searchParams }: Props) => {
-  const { status: statusParam, orderBy: orderByParam } = await searchParams;
+  const {
+    status: statusParam,
+    orderBy: orderByParam,
+    page: pageNumber,
+  } = await searchParams;
 
   const statuses = [...Object.values(Status), "all"];
   const status = statuses.includes(statusParam) ? statusParam : "all";
@@ -19,7 +23,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
     ? { [orderByParam]: "asc" }
     : undefined;
 
-  const page = parseInt(searchParams.page) || 1;
+  const page = parseInt(pageNumber) || 1;
   const pageSize = 10;
 
   let issues = [];

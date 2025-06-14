@@ -8,7 +8,7 @@ const IssueActionPage = () => {
     <Flex justify="between">
       <IssueStatusFilter />
       <Button>
-        <Link href="issues/new">New Issue</Link>
+        <Link href="/issues/new">New Issue</Link>
       </Button>
     </Flex>
   );

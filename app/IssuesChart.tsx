@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@radix-ui/themes";
+import { Card, Heading } from "@radix-ui/themes";
 import { ResponsiveContainer, BarChart, XAxis, YAxis, Bar } from "recharts";
 
 interface T {
@@ -13,7 +13,7 @@ interface Props {
   propData: T;
 }
 
-const IssuesChart = async ({ propData }: Props) => {
+const IssuesChart = ({ propData }: Props) => {
   const data = [
     { label: "Open", value: propData.OPEN },
     { label: "In Progress", value: propData.IN_PROGRESS },
@@ -22,6 +22,9 @@ const IssuesChart = async ({ propData }: Props) => {
 
   return (
     <Card>
+      <Heading size="4" mb="4">
+        Issues Charts
+      </Heading>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
           <XAxis dataKey="label" />

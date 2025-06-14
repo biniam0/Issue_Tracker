@@ -47,13 +47,14 @@ const IssueDetailPage = async ({ params }: Props) => {
 };
 
 export const generateMetadata = async ({ params }: Props) => {
+  const {issueId} = await params
   const issues = await prisma.issue.findUnique({
     where: {
-      id: parseInt(params.issueId),
+      id: parseInt(issueId),
     },
   });
   return {
-    title: issues?.title,
+    title: "Issue - " + issues?.title,
     description: "Details of issue " + issues?.description,
   };
 };

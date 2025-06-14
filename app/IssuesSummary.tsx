@@ -1,6 +1,6 @@
 import { prisma } from "@/prisma/client";
 import { Status } from "@prisma/client";
-import { Card, Flex, Text } from "@radix-ui/themes";
+import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import Link from "next/link";
 
 interface T {
@@ -24,23 +24,31 @@ const IssuesSummary = async ({ propData }: Props) => {
     { label: "Closed Issues", value: propData.CLOSED, status: "CLOSED" },
   ];
   return (
-    <Flex gap="3">
-      {statuses.map((status) => (
-        <Card key={status.label}>
-          <Flex direction="column">
-            <Link
-              href={`/issues/list?status=${status.status}`}
-              className="text-sm font-extralight"
-            >
-              {status.label}
-            </Link>
-            <Text size="4" className="font-bold">
-              {status.value}
-            </Text>
-          </Flex>
-        </Card>
-      ))}
-    </Flex>
+    <Card>
+      <Flex direction="column">
+        <Heading size="4" mb="4" className="">
+          Issues Summary
+        </Heading>
+
+        <Flex gap="3">
+          {statuses.map((status) => (
+            <Card key={status.label}>
+              <Flex direction="column">
+                <Link
+                  href={`/issues/list?status=${status.status}`}
+                  className="text-sm font-extralight"
+                >
+                  {status.label}
+                </Link>
+                <Text size="4" className="font-bold">
+                  {status.value}
+                </Text>
+              </Flex>
+            </Card>
+          ))}
+        </Flex>
+      </Flex>
+    </Card>
   );
 };
 
