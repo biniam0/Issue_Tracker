@@ -7,6 +7,8 @@ import IssueEditButton from "./IssueEditButton";
 import { getServerSession } from "next-auth";
 import authOptions from "@/app/auth/authOptions";
 import AssigneeSelect from "./AssigneeSelect";
+import { Metadata } from "next";
+import { Prisma } from "@prisma/client";
 
 interface Props {
   params: {
@@ -42,6 +44,18 @@ const IssueDetailPage = async ({ params }: Props) => {
       )}
     </Grid>
   );
+};
+
+export const generateMetadata = async ({ params }: Props) => {
+  const issues = await prisma.issue.findUnique({
+    where: {
+      id: parseInt(params.issueId),
+    },
+  });
+  return {
+    title: issues?.title,
+    description: "Details of issue " + issues?.description,
+  };
 };
 
 export default IssueDetailPage;
