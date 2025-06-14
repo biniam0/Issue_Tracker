@@ -1,14 +1,13 @@
+import authOptions from "@/app/auth/authOptions";
 import { prisma } from "@/prisma/client";
 import { Box, Flex, Grid } from "@radix-ui/themes";
+import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
+import AssigneeSelect from "./AssigneeSelect";
 import IssueDeleteButton from "./IssueDeleteButton";
 import IssueDetails from "./IssueDetails";
 import IssueEditButton from "./IssueEditButton";
-import { getServerSession } from "next-auth";
-import authOptions from "@/app/auth/authOptions";
-import AssigneeSelect from "./AssigneeSelect";
-import { Metadata } from "next";
-import { Prisma } from "@prisma/client";
+import { cache } from "react";
 
 interface Props {
   params: {
@@ -16,16 +15,21 @@ interface Props {
   };
 }
 
+const fetchUser = cache((issueId: number) =>
+  prisma.issue.findUnique({
+    where: {
+      id: issueId,
+    },
+  })
+);
+
 const IssueDetailPage = async ({ params }: Props) => {
   const session = await getServerSession(authOptions);
 
   const { issueId } = await params;
 
-  const issue = await prisma.issue.findUnique({
-    where: {
-      id: parseInt(issueId),
-    },
-  });
+  const issue = await fetchUser(parseInt(issueId));
+
   if (!issue) notFound();
 
   return (
@@ -47,12 +51,8 @@ const IssueDetailPage = async ({ params }: Props) => {
 };
 
 export const generateMetadata = async ({ params }: Props) => {
-  const {issueId} = await params
-  const issues = await prisma.issue.findUnique({
-    where: {
-      id: parseInt(issueId),
-    },
-  });
+  const { issueId } = await params;
+  const issues = await fetchUser(parseInt(issueId));
   return {
     title: "Issue - " + issues?.title,
     description: "Details of issue " + issues?.description,
