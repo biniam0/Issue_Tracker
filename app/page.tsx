@@ -1,17 +1,9 @@
 import { prisma } from "@/prisma/client";
-import IssuesChart from "./IssuesChart";
-import IssuesSummary from "./IssuesSummary";
-import LatestIssues from "./LatestIssues";
-import { Flex, Grid, Heading } from "@radix-ui/themes";
-import { Metadata } from "next";
+import DashboardClient from "./DashboardClient";
 
-const counts = {
-  OPEN: 0,
-  IN_PROGRESS: 0,
-  CLOSED: 0,
-};
+export const revalidate = 60;
 
-const Home = async () => {
+export default async function Home() {
   const groupedCounts = await prisma.issue.groupBy({
     by: ["status"],
     _count: {
@@ -19,28 +11,15 @@ const Home = async () => {
     },
   });
 
+  const counts = {
+    OPEN: 0,
+    IN_PROGRESS: 0,
+    CLOSED: 0,
+  };
+
   groupedCounts.forEach(({ status, _count }) => {
     counts[status] = _count.status;
   });
 
-  const { OPEN: open, CLOSED: closed, IN_PROGRESS: inProgress } = counts;
-  return (
-    <>
-      <Grid columns={{ initial: "1", md: "2" }} gap="5">
-        <Heading className="font-normal">Dashboard</Heading>
-        <Flex direction="column" gap="5">
-          <IssuesSummary propData={counts} />
-          <IssuesChart propData={counts} />
-        </Flex>
-        <LatestIssues />
-      </Grid>
-    </>
-  );
-};
-
-export const metadata: Metadata = {
-  title: "Issue Tracker - Dashboard",
-  description: "View a summary of project issues"
+  return <DashboardClient counts={counts} />;
 }
-
-export default Home;

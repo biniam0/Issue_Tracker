@@ -16,4 +16,4 @@ const authOptions: NextAuthOptions = {
   },
 };
 
-export default authOptions
+export default authOptions;
