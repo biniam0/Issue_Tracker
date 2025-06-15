@@ -1,38 +1,80 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🐛 Issue Tracker
 
-## Getting Started
+A modern and minimal issue tracking application built with [Next.js](https://nextjs.org/), Prisma, PostgreSQL, and deployed on [Vercel](https://vercel.com/).
 
-First, run the development server:
+---
+
+## 🚀 Getting Started
+
+To run the development server locally:
 
 ```bash
+# Using npm
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open your browser and visit:  
+👉 [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can start editing the app by modifying `app/page.tsx`. The page auto-updates as you save.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
+## 🔧 Features
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ Create, edit, and manage issues
+- 🔍 Filter issues by status (Open, In Progress, Closed)
+- 📄 Pagination support for large lists
+- ⚡️ Fast refresh and streamlined dev experience
+- 🎨 Clean and responsive UI with [Radix UI](https://www.radix-ui.com/)
+- 🧠 Built with App Router (`app/` directory in Next.js 13+)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 🛠️ Tech Stack
 
-## Deploy on Vercel
+- **Frontend:** [Next.js 14](https://nextjs.org) (App Router, TypeScript)
+- **Database:** [PostgreSQL](https://www.postgresql.org/) (hosted on [Neon](https://neon.tech))
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **Deployment:** [Vercel](https://vercel.com)
+- **UI Components:** [Radix Themes](https://www.radix-ui.com/themes)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-=======
-# Issue_Tracker
->>>>>>> 07760ad612d419796aa1d944d8605b0db64d8f62
+## 🌐 Deployment
+
+### ▶️ Deploy on Vercel
+
+Click the button below to deploy your own copy of the Issue Tracker app:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+### ✅ Environment Variables
+
+Before deploying, make sure to set the following environment variables in your Vercel project settings:
+
+| Key            | Value                                                                  |
+|----------------|------------------------------------------------------------------------|
+| `DATABASE_URL` | Your PostgreSQL connection string (e.g. from [Neon](https://neon.tech))<br>Make sure it includes `?sslmode=require` |
+
+Example:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST/dbname?sslmode=require"
+```
+
+---
+
+## 📚 Learn More
+
+- [📖 Next.js Documentation](https://nextjs.org/docs)
+- [⚙️ Prisma Documentation](https://www.prisma.io/docs)
+- [🎨 Radix UI](https://www.radix-ui.com/themes)
+- [🚀 Vercel Deployment Guide](https://vercel.com/docs)
+
+---
+
+## 📝 License
+
+This project is open-source and available under the [MIT License](LICENSE).
