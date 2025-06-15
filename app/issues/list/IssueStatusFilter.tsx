@@ -1,35 +1,48 @@
 "use client";
 
+import { updateQueryParams } from "@/app/utils/updateQuery";
 import { Status } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 
 const statuses: { label: string; value: Status }[] = [
   { label: "Open", value: "OPEN" },
   { label: "In Progress", value: "IN_PROGRESS" },
   { label: "Closed", value: "CLOSED" },
-];
+]
 
-const IssueStatusFilter = () => {
+interface IssueStatusFilterContentProps {
+  basePath?: string;
+}
+
+const IssueStatusFilterContent = ({ 
+  basePath = "/issues/list" 
+}: IssueStatusFilterContentProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const handleStatusChange = (status: string) => {
+    const currentParamsObject: Record<string, string> = {};
+    searchParams.forEach((value, key) => {
+      currentParamsObject[key] = value;
+    });
+    
+    const query = updateQueryParams(
+      {
+        status: status === "all" ? null : status,
+        page: null, 
+      },
+      currentParamsObject
+    );
+
+    router.push(`${basePath}${query}`);
+  };
 
   return (
     <Select.Root
       defaultValue={searchParams.get("status") || "all"}
-      onValueChange={(status) => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("status", status);
-
-        const orderBy = searchParams.get("orderBy");
-        if (orderBy) params.set("orderBy", orderBy);
-
-        params.delete("page");
-
-        const query = params.toString() ? `?${params.toString()}` : "";
-        router.push(`/issues/list${query}`);
-      }}
+      onValueChange={handleStatusChange}
     >
       <Select.Trigger placeholder="Filter by status..." />
       <Select.Content>
@@ -41,6 +54,18 @@ const IssueStatusFilter = () => {
         ))}
       </Select.Content>
     </Select.Root>
+  );
+};
+
+interface IssueStatusFilterProps {
+  basePath?: string;
+}
+
+const IssueStatusFilter = ({ basePath }: IssueStatusFilterProps) => {
+  return (
+    <Suspense fallback={<div>Loading filters...</div>}>
+      <IssueStatusFilterContent basePath={basePath} />
+    </Suspense>
   );
 };
 

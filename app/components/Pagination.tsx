@@ -8,18 +8,21 @@ import {
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
 import React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { updateQueryParams } from "../utils/updateQuery";
 
 interface Props {
   itemCount: number;
   pageSize: number;
   currentPage: number;
+  basePath?: string; 
 }
 
 const Pagination = ({
   itemCount: itemsCount,
   pageSize,
   currentPage,
+  basePath = "/issues/list", 
 }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,13 +31,21 @@ const Pagination = ({
   if (pageCount <= 1) return null;
 
   const changePage = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    // Set or update the page number
-    params.set("page", page.toString());
+    const currentParamsObject: Record<string, string> = {};
+    searchParams.forEach((value, key) => {
+      currentParamsObject[key] = value;
+    });
+    
+    const query = updateQueryParams(
+      {
+        page: page.toString(),
+      },
+      currentParamsObject
+    );
 
-    const query = params.toString() ? `?${params.toString()}` : "";
-    router.push(`/issues/list${query}`);
+    router.push(`${basePath}${query}`);
   };
+
   return (
     <Flex align="center" gap="2">
       <Text size="2">

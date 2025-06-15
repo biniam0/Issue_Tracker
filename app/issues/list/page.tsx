@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Pagination from "@/app/components/Pagination";
 import { prisma } from "@/prisma/client";
 import { Status } from "@prisma/client";
@@ -7,15 +8,16 @@ import { Flex } from "@radix-ui/themes";
 import { Metadata } from "next";
 
 interface Props {
-  searchParams: IssueQuery;
+  searchParams: Promise<IssueQuery>;
 }
 
-const IssuesPage = async ({ searchParams }: Props) => {
+const IssuesPageContent = async ({ searchParams }: Props) => {
+  const resolvedSearchParams = await searchParams;
   const {
     status: statusParam,
     orderBy: orderByParam,
     page: pageNumber,
-  } = await searchParams;
+  } = resolvedSearchParams;
 
   const statuses = [...Object.values(Status), "all"];
   const status = statuses.includes(statusParam) ? statusParam : "all";
@@ -50,13 +52,21 @@ const IssuesPage = async ({ searchParams }: Props) => {
   return (
     <Flex direction="column" gap="3">
       <IssueActionPage />
-      <IssueTable searchParams={searchParams} issues={issues} />
+      <IssueTable searchParams={resolvedSearchParams} issues={issues} />
       <Pagination
         itemCount={issueCount}
         pageSize={pageSize}
         currentPage={page}
       />
     </Flex>
+  );
+};
+
+const IssuesPage = ({ searchParams }: Props) => {
+  return (
+    <Suspense fallback={<div>Loading issues...</div>}>
+      <IssuesPageContent searchParams={searchParams} />
+    </Suspense>
   );
 };
 

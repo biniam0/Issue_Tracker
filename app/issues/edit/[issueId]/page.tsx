@@ -1,4 +1,3 @@
-
 import { prisma } from "@/prisma/client";
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -9,9 +8,9 @@ const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
 });
 
 interface Props {
-  params: {
+  params: Promise<{
     issueId: string;
-  };
+  }>;
 }
 
 const EditIssuePage = async ({ params }: Props) => {

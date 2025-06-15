@@ -35,7 +35,7 @@ const IssueDeleteButton = ({ issueId }: { issueId: number }) => {
         <AlertDialog.Content>
           <AlertDialog.Title>Confirm Deletion</AlertDialog.Title>
           <AlertDialog.Description>
-            Are you sure you want to delete this issue? This action can't be
+            Are you sure you want to delete this issue? This action can&apos;t be
             undone.
           </AlertDialog.Description>
           <Flex mt="4" gap="3">
@@ -56,7 +56,7 @@ const IssueDeleteButton = ({ issueId }: { issueId: number }) => {
         <AlertDialog.Content>
           <AlertDialog.Title>Error</AlertDialog.Title>
           <AlertDialog.Description>
-            This issue can't be deleted
+            This issue can&apos;t be deleted
           </AlertDialog.Description>
           <Button
             variant="soft"

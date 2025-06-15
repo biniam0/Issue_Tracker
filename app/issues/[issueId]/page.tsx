@@ -10,9 +10,9 @@ import IssueEditButton from "./IssueEditButton";
 import { cache } from "react";
 
 interface Props {
-  params: {
+  params: Promise<{
     issueId: string;
-  };
+  }>;
 }
 
 const fetchUser = cache((issueId: number) =>
@@ -25,13 +25,10 @@ const fetchUser = cache((issueId: number) =>
 
 const IssueDetailPage = async ({ params }: Props) => {
   const session = await getServerSession(authOptions);
-
   const { issueId } = await params;
-
   const issue = await fetchUser(parseInt(issueId));
-
   if (!issue) notFound();
-
+  
   return (
     <Grid columns={{ initial: "1", sm: "5" }} gap="5">
       <Box className="md:col-span-4">
